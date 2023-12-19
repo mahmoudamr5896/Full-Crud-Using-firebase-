@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Category CRUD</title>
+</head>
+            <style>
+
+                body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            }
+
+            h1 {
+            text-align: center;
+            }
+
+            form {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            }
+
+            input[type="text"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            width: 600px;
+            }
+
+            button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            background-color: #333;
+            color: #fff;
+            cursor: pointer;
+            }
+
+            ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            }
+
+            li {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            }
+
+            li span {
+            font-weight: bold;
+            }
+
+            button:hover {
+            background-color: #444;
+            }
+
+            .edit {
+            background-color: #f79256;
+            }
+
+            .delete {
+            background-color: #d33a3a;
+            }
+            /* #categoryForm{
+                width: 500px;
+                padding-left: 50%;
+            }
+            #categoryList{
+                width: 500px;
+            } */
+            #Data{
+            margin-left: 30%;
+                width: 500px;
+                border: 4px solid #ccc ;
+            }
+            </style>
+<body>
+  <h1>Category CRUD</h1>
+            <div id="Data">
+                <form id="categoryForm" >
+                <input type="text" id="nameInput" placeholder="Category Name">
+                <button type="submit">Create</button>
+            </form>
+
+            <ul id="categoryList"></ul>
+            </div>
+
+
+  <script>
+    const categoryForm = document.getElementById('categoryForm');
+    const nameInput = document.getElementById('nameInput');
+    const categoryList = document.getElementById('categoryList');
+    let categories = [];
+
+    // Create
+    categoryForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const categoryName = nameInput.value.trim();
+      if (categoryName === '') {
+        alert('Please enter a category name.');
+        return;
+      }
+      const newCategory = {
+        id: Date.now(),
+        name: categoryName,
+      };
+      categories.push(newCategory);
+      renderCategories();
+      categoryForm.reset();
+    });
+    // Read
+    function renderCategories() {
+      categoryList.innerHTML = '';
+
+      categories.forEach((category) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span>${category.name}</span>
+          <button onclick="editCategory(${category.id})">Edit</button>
+          <button onclick="deleteCategory(${category.id})">Delete</button>
+        `;
+        categoryList.appendChild(li);
+      });
+    }
+
+    // Update
+    function editCategory(categoryId) {
+      const category = categories.find((c) => c.id === categoryId);
+
+      if (!category) {
+        alert('Category not found!');
+        return;
+      }
+      const newName = prompt('Enter the new category name:', category.name);
+      if (newName && newName.trim() !== '') {
+        category.name = newName.trim();
+        renderCategories();
+      }
+    }
+
+    // Delete
+    function deleteCategory(categoryId) {
+      categories = categories.filter((c) => c.id !== categoryId);
+      renderCategories();
+    }
+
+  </script>
+</body>
+</html>

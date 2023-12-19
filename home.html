@@ -1,0 +1,209 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <form action="" method="get" onsubmit="Create_prod(e)" >
+      <h1>Add Product</h1>
+      <!-- a.	ID
+b.	Name
+c.	Image
+d.	Category
+e.	Price
+f.	Description
+g.	Stock Quantity -->
+
+      <form   onsubmit="Create_products()" >
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+         
+        <label for="name">Image:</label>
+        <input type="file" id="img" name="name" required>
+        
+        <label for="name" >Select Category:</label>
+        <select style="align-content: center;" name="Category" id="Category">
+          <option value="p1">Category 1</option>
+          <option value="p1">Category 2</option>
+          <option value="p1"> Category 3</option>
+        </select>
+            <br>
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" required>
+    
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required></textarea>
+        <label for="price">Stock Quantity:</label>
+        <input type="number" id="price" name="price" required>
+    
+        <button type="submit" >Add</button>
+
+    </form>
+
+  
+
+    <div > 
+      <h1>Product List</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Catogery</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody id="Data">
+          <!-- <tr>
+            <td>1</td>
+            <td>Product 1</td>
+            <td>$10.99</td>
+            <td>This is the description of product 1.</td>
+            <td><img src="download (2).png" alt="" width="40px"></td>
+            <td><img src="download.png" width="40px" alt=""></td>
+          </tr> -->
+        </tbody>
+      </table>
+    </div>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase,ref,set,get,child ,onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // https://firebase.google.com/docs/web/setup#available-libraries
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyDYDdUx3ZZNAzWL84Ar60fGH7wL_uyd71M",
+          authDomain: "formal-folder-376913.firebaseapp.com",
+          databaseURL: "https://formal-folder-376913-default-rtdb.firebaseio.com",
+          projectId: "formal-folder-376913",
+          storageBucket: "products.appspot.com",
+          messagingSenderId: "975600999814",
+          appId: "1:975600999814:web:4c0f872050c5c05cc82007"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        if(app)
+        console.log("done Worked!!")
+
+
+            const DB = getDatabase(); 
+
+
+
+
+// // write to data base  opration 1
+// function writeUserData(userId, name, email, imageUrl) {
+//   const db = getDatabase();
+//   set(ref(db, 'users/' + userId), {
+//     username: name,
+//     email: email,
+//     profile_picture : imageUrl
+//   });
+// }
+// writeUserData(1,"mahmoud","mahmoud@gmail.com","img.png");
+// -----------------------------------------------------
+
+function writeUserData(producId,prod_name, prod_img, prod_price, prod_Cat) {
+  const db = getDatabase();
+  set(ref(db, 'users/' + producId), {
+    productName: prod_name,
+    productImag: prod_img,
+    productPrice:prod_price,
+    productCatogery : prod_Cat
+
+  });
+}
+
+function Create_products(){
+
+  var prod_name = document.getElementById("name").value;
+  var prod_img = document.getElementById("img").value;
+  var prod_price = parseInt(document.getElementById("price").value);
+  var prod_Cat = document.getElementById("Category").value;
+
+}
+  writeUserData(6,22, "الحمد لله علي الستر","خليها علي الله ", "هتفرج باذن الله ");  
+
+
+  
+
+// if(){
+//   writeUserData(producId,prod_name, prod_img, prod_price, prod_Cat);
+// }else{
+// e.preventdefualt();
+// }
+          
+
+
+
+
+// writeUserData(3,"laptop",'omg.png',200,"cat1");
+
+
+
+//----------------------------------------------------------------------------------------------------
+// read from database
+
+const db = getDatabase();
+const postId = 1;
+const starCountRef = ref(db, 'posts/' + postId + '/starCount');
+// onValue(starCountRef, (snapshot) => {
+//   const data = snapshot.val();
+//   updateStarCount(postElement, data);
+//   console.log(data)
+// });
+
+const dbRef = ref(getDatabase());
+for(let i=0;i<10;i++){
+const userId = i;
+get(child(dbRef, `users/${userId}`)).then((snapshot) => {
+  if (snapshot.exists()){
+    const Data = snapshot.val()
+    document.getElementById("Data").innerHTML +=
+    `<tr>                                        
+            <td>${userId}</td>
+            <td>${Data.productName}</td>
+            <td>${Data.productPrice}</td>
+            <td>${Data.productCatogery}</td>
+            <td><img src="download (2).png" alt="" width="40px"></td>
+            <td><img src="download.png" width="40px" alt=""></td>
+     </tr>`; 
+  } else {
+    console.log("No data available");
+  }
+}).catch((error) => {
+  console.log(error);
+});
+}
+//=-------------------------- End Read----------------------------------------------------------
+
+//   display
+function display(){
+  var trs='';
+  for(var i =0 ; i<productContainer.length;i++){
+    trs +=`<tr>
+    <td>${i+1}</td>
+    <td>${productContainer[i].pname}</td>
+    <td>${productContainer[i].price}</td>
+    <td>${productContainer[i].category}</td>
+    <td>${productContainer[i].desc}</td>
+    <td>
+      <button class="btn btn-info" onclick="getProductInfo(${i})" ><i class="fa fa-solid fa-edit"></i></button>
+    </td>
+    <td>
+ 
+      <button class="btn btn-danger" onclick="delet(${i})"><i class="fa-solid fa-trash"></i></button>
+    </td>
+  </tr>`
+  }
+  document.getElementById('tableBody').innerHTML=trs
+}
+      </script>
+</body>
+</html>
